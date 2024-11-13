@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather API Form</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <h1 class="header1">Profile Preferences</h1>
+    <form id="weather-form" class="form">
+      <label for="name">Your Name:</label>
+      <input
+        type="text"
+        id="first-name"
+        name="name"
+        placeholder="Enter name"
+      /><br /><br />
+      <small class="error" id="name-error">Name is required.</small>
+
+      <label for="color">City:</label>
+      <input
+        type="text"
+        id="city"
+        name="city"
+        placeholder="Enter city"
+      /><br /><br />
+      <small class="error" id="city-error">Please enter a valid city.</small>
+
+      <div class="temperature-toggle">
+        <div class="temperature-option">
+          <label for="Celsius">Celsius:</label>
+          <img
+            src="img/degree-symbol-celsius-temperature.png"
+            alt="Celsius Symbol"
+          />
+          <label class="switch">
+            <input type="checkbox" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="temperature-option">
+          <label for="Fahrenheit">Fahrenheit:</label>
+          <img
+            src="img/degree-symbol-fahrenheit-temperatures.png"
+            alt="Fahrenheit Symbol"
+          />
+          <label class="switch">
+            <input type="checkbox" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card" style="display: none">
+        <!-- <h1 class="cityDisplay">Miami</h1>
+        <p class="tempDisplay">99F</p>
+        <p class="humidityDisplay">Humidity: 75%</p>
+        <p class="descDisplay">Clear Skies</p>
+        <p class="errorDisplay">Please enter a city</p> -->
+      </div>
+
+      <button type="submit" class="get-weather">Get Weather</button>
+    </form>
+  </body>
+</html>
