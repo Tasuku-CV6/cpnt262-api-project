@@ -1,6 +1,6 @@
 body {
   font-family: sans-serif;
-  background-color: hsl(0, 0%, 95%);
+  background-image: url("https://plus.unsplash.com/premium_photo-1672234253746-99ac19181f0b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -9,19 +9,12 @@ body {
 
 .weatherForm {
   margin: 20px;
-  display: grid;
+  display: flex; /* Use flex for form layout */
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center content horizontally */
 }
 
-.cityInput {
-  padding: 10px;
-  font-size: 2rem;
-  font-weight: bold;
-  border: 2px solid hsla(0, 0%, 20%, 0.3);
-  border-radius: 10px;
-  margin: 10px;
-  width: 300px;
-}
-
+.cityInput,
 .nameInput {
   padding: 10px;
   font-size: 2rem;
@@ -30,6 +23,27 @@ body {
   border-radius: 10px;
   margin: 10px;
   width: 300px;
+}
+
+.alert {
+  padding: 20px;
+  background-color: #1bb516;
+  color: white;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
 }
 
 button[type="submit"] {
@@ -59,6 +73,18 @@ button[type="submit"]:hover {
 }
 
 h1 {
+  margin-bottom: 0%;
+  font-family: "Times New Roman", Times, serif;
+  color: black;
+}
+
+.h2 {
+  text-align: center;
+  font-family: sans-serif;
+  margin-bottom: 0%;
+}
+
+h3 {
   margin-top: 0;
   margin-bottom: 25px;
 }
@@ -70,14 +96,16 @@ p {
 
 .cityDisplay,
 .tempDisplay {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: bold;
   margin-bottom: 25px;
 }
 
-.humidtyDisplay {
+.humidityDisplay {
+  font-style: italic;
   font-weight: bold;
   margin-bottom: 25px;
+  font-size: 2rem;
 }
 
 .descDisplay {
@@ -95,4 +123,97 @@ p {
   font-size: 2.5rem;
   font-weight: bold;
   color: red;
+}
+
+.error {
+  color: red;
+  font-size: 1.5rem;
+  margin-left: 10px;
+}
+
+/* Toggle Button for Temperature */
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin: 0 10px; /* Adjust margin to center better */
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #12d90e;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Labels styling */
+.labels {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the labels horizontally */
+  margin-top: 10px;
+}
+
+#celsius-label,
+#fahrenheit-label {
+  display: inline-block;
+  text-align: center;
+  font-size: 1.4rem;
+  margin: 0 10px; /* Space between labels and center them */
+}
+
+/* Add some spacing between the toggle and labels */
+.switch-container {
+  display: flex;
+  align-items: center; /* Align vertically */
+  justify-content: center; /* Center horizontally */
+  margin-top: 10px;
+  padding: 20px;
 }

@@ -8,9 +8,38 @@
     <script src="weather.js" defer></script>
   </head>
   <body>
+    <h1 id="Header">WeatherVibe</h1>
+
+    <div class="alert" id="personalized-alert" style="display: none">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';"
+        >&times;</span
+      >
+      <strong>Success!</strong> Welcome to the WeatherVibe app,
+      <span id="user-name"></span> We hope you can find what you are looking
+      for!
+    </div>
+
     <form class="weatherForm">
       <input type="text" class="nameInput" placeholder="Enter name" />
+      <small class="error" id="name-error" style="display: none; color: red"
+        >Name is missing.</small
+      >
+
+      <!-- <p class="greeting"></p> -->
       <input type="text" class="cityInput" placeholder="Enter city" />
+      <h2 class="h2">Temperture Unit</h2>
+
+      <div class="switch-container">
+        <label for="temp-toggle" class="switch">
+          <input type="checkbox" id="temp-toggle" />
+          <span class="slider round"></span>
+        </label>
+        <div class="labels">
+          <span id="celsius-label">°C</span>
+          <span id="fahrenheit-label">°F</span>
+        </div>
+      </div>
+
       <button type="submit">Get Weather</button>
     </form>
 
