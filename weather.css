@@ -139,7 +139,7 @@ p {
   display: inline-block;
   width: 60px;
   height: 34px;
-  margin: 0 10px; /* Adjust margin to center better */
+  margin: 0 10px;
 }
 
 /* Hide default HTML checkbox */
@@ -197,7 +197,7 @@ input:checked + .slider:before {
 .labels {
   display: flex;
   align-items: center;
-  justify-content: center; /* Center the labels horizontally */
+  justify-content: center;
   margin-top: 10px;
 }
 
@@ -206,10 +206,9 @@ input:checked + .slider:before {
   display: inline-block;
   text-align: center;
   font-size: 1.4rem;
-  margin: 0 10px; /* Space between labels and center them */
+  margin: 0 10px;
 }
 
-/* Add some spacing between the toggle and labels */
 .switch-container {
   display: flex;
   align-items: center; /* Align vertically */

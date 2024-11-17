@@ -10,7 +10,7 @@ const apiKey = "71fb92d443e2393b0235e8857901001f"; // Personal API key for Open 
 // Default unit is set to Celsius or Fahrenheit
 let unit = `metric`; // This is equaled to Celsius
 
-// Event listener for toggle button to switch between Celsius & Fahrenheit
+// Event listener for temperaturetoggle button to switch between Celsius & Fahrenheit
 toggleButton.addEventListener(`change`, function () {
   unit = toggleButton.checked ? `imperial` : `metric`;
   if (cityInput.value.trim()) {
@@ -21,6 +21,7 @@ toggleButton.addEventListener(`change`, function () {
 weatherForm.addEventListener("submit", async (event) => {
   event.preventDefault(); // This stops the "button" from submitting unless all required fields are met
   saveSessionStorage();
+  saveCookie();
   const city = cityInput.value.trim();
   const name = nameInput.value.trim();
 
@@ -34,18 +35,9 @@ weatherForm.addEventListener("submit", async (event) => {
       const weatherData = await getWeatherData(city);
       displayWeatherInfo(weatherData);
       console.log(`weatherData`, weatherData);
-      //Using Object Destructuring to extract values from Weather Data
-      saveLocalStorage(
-        JSON.stringify([
-          {
-            name: weatherData.main.name,
-            temp: weatherData.main.temp,
-            humidity: weatherData.main.humidity,
-            description: weatherData.weather[0].description,
-            id: weatherData.weather[0].id,
-          },
-        ])
-      );
+
+      // Save the full weather data to local storage for persistence
+      saveLocalStorage(weatherData);
     } catch (error) {
       console.error(error);
       displayError(error.message);
@@ -90,12 +82,25 @@ async function getWeatherData(city) {
 }
 
 function displayWeatherInfo(data) {
-  // Using Object Destructuring to extract values from Weather Data
-  const {
-    name: city,
-    main: { temp, humidity },
-    weather: [{ description, id }],
-  } = data;
+  // Checking if the data is in the expected structure
+  const city = data.name || "Unknown City"; // Fallback to "Unknown City" if no name is found such as an issue occuring with the API
+  const temp = data.main ? data.main.temp : null; // If the data is missing or there is an issue with the API then it would assign it a "null"
+  const humidity = data.main ? data.main.humidity : null;
+  const description = // If it fetches the data but there is no decription then it would return "No description available"
+    data.weather && data.weather[0]
+      ? data.weather[0].description
+      : "No description available";
+  const id = data.weather && data.weather[0] ? data.weather[0].id : null;
+
+  // Check if the data exists for weather properties
+  if (
+    temp === null ||
+    humidity === null ||
+    description === "No description available"
+  ) {
+    displayError("Weather data is incomplete. Please try again.");
+    return;
+  }
 
   card.textContent = "";
   card.style.display = "flex";
@@ -166,12 +171,12 @@ function displayError(message) {
 // Cookies, Local, Session Storage
 
 // Event Listener used to load the Name and City from local storage onto the page so it preisists
-// TODO: Make it so that when first entering the page, nothing is in the field and only making it repopulate only when saved
 document.addEventListener("DOMContentLoaded", function () {
   const savedNameInput = localStorage.getItem(`nameInput`);
   const savedCityInput = localStorage.getItem(`cityInput`);
   const savedWeatherData = localStorage.getItem(`savedWeatherData`);
 
+  // "if" coniditional is used because if the saved name is found in localStorage, it would be used to populate the name input field
   if (savedNameInput) {
     document.querySelector(".nameInput").value = savedNameInput;
   }
@@ -180,21 +185,44 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".cityInput").value = savedCityInput;
   }
 
-  console.log("savedWeatherData", JSON.parse(savedWeatherData));
-  if (JSON.parse(savedWeatherData).length > 0) {
+  // Load Weather Data so that it persists if the data exists
+  if (savedWeatherData) {
+    const parsedWeatherData = JSON.parse(savedWeatherData); // This is used to convert the String data stored in Local storage into a javascript Object in order to display the Weather data
+    displayWeatherInfo(parsedWeatherData); // This simply displays the data
   }
 });
 
+// Event Listener used to retrieve the toggle state from sessionStorage (But for some odd reason the toggle retrives the previous saved data but doesn't change the information on the data)
+document.addEventListener("DOMContentLoaded", function () {
+  // Get the saved data from sessionStorage
+  const savedToggleState = sessionStorage.getItem("temp-toggle");
+
+  if (savedToggleState) {
+    // Set the toggle button state based on the saved value
+    toggleButton.checked = savedToggleState === "on";
+
+    // Ensure the unit is updated according to the toggle state
+    unit = toggleButton.checked ? "imperial" : "metric";
+
+    // If the city input has a value, re-fetch weather data to reflect the updated unit
+    const savedCity = document.querySelector(".cityInput").value.trim();
+    if (savedCity) {
+      getWeatherData(savedCity); // Re-fetch weather data for the saved city
+    }
+  }
+});
+
+// Local storage used for last searched data or "Everything"
 function saveLocalStorage(weatherData) {
   const nameData = document.querySelector(".nameInput").value;
   const cityData = document.querySelector(".cityInput").value;
 
   localStorage.setItem(`nameInput`, nameData);
   localStorage.setItem(`cityInput`, cityData);
-  // Weather data is saved in Local Storage but doens't persist like name and city, will have to explain furture impementation
-  localStorage.setItem(`savedWeatherData`, weatherData);
+  localStorage.setItem(`savedWeatherData`, JSON.stringify(weatherData)); // This a method that converts a JavaScript object (or array) into a JSON string. This allows it to store complex objects like weatherData in localStorage.
 }
 
+// Session storage used for City and Temp toggle
 function saveSessionStorage() {
   const cityData = document.querySelector(".cityInput").value;
   const toggleData = document.getElementById("temp-toggle").checked
@@ -205,10 +233,16 @@ function saveSessionStorage() {
   sessionStorage.setItem(`cityInput`, cityData);
 }
 
-// Doesn't work at the moment due to it not having a button, but for future implementation there will be a button that will trigger the saveCookie() function when clicked.
-function saveCookie(nameInput) {
-  let data = document.querySelector(`.${nameInput}`).value;
-  document.cookie = `myCookie=${data}; max-age=300`;
+// Cookies used for Username
+function saveCookie() {
+  const nameData = document.querySelector(".nameInput").value; // This grabs whatever is in the name input field and saves it if it's valid
+
+  if (nameData) {
+    const expiryDate = new Date(); // Creates a date object
+    expiryDate.setTime(expiryDate.getTime() + 30 * 24 * 60 * 60 * 1000); // Sets the expiry date to 30 days (Not sure if it works properly)
+
+    document.cookie = `userName=${nameData}; expires=${expiryDate.toUTCString()}; path=/`; // First half is used to retrive the cookie while the second is used for the expiration date for the cookie,
+  }
 }
 
 // Error Prevention
@@ -222,7 +256,3 @@ function hideError(errorId) {
   const errorElement = document.getElementById(errorId);
   errorElement.style.display = "none"; // Hide error message
 }
-
-// cookies for Username
-// session storage City, Temp toggle
-// local storage last searched data "Everything"
