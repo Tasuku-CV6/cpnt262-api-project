@@ -5,7 +5,7 @@ const cityInput = document.querySelector(".cityInput");
 const nameInput = document.querySelector(".nameInput");
 const card = document.querySelector(".card");
 const toggleButton = document.getElementById("temp-toggle");
-const apiKey = "71fb92d443e2393b0235e8857901001f"; // Personal API key for Open Weather Map
+const apiKey = "__API_KEY__"; // Personal API key for Open Weather Map
 
 // Default unit is set to Celsius or Fahrenheit
 let unit = `metric`; // This is equaled to Celsius
